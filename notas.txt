@@ -1,0 +1,55 @@
+## Correr proyecto
+    1. npm install (instalo dependencis)
+    2. npm run dev
+
+## Crear pryecto con vite y vue
+    1. npm create vite@latest
+        -nombre de proyecto
+        -vue
+        -JavaScript
+    2. cd proyecto
+    3. npm install
+    4. npm run dev
+
+## Agregar Tailwind
+    1. Instalamos paquetes tailwind
+        npm i -D tailwindcss autoprefixer
+
+    2. Inicializamos tailwind
+        npx tailwindcss init -p
+
+    3. Configuramos archivos que Tailwind debe "analizar". En el [tailwind.config.js]
+    
+        /** @type {import('tailwindcss').Config} */
+        export default {
+            content: [
+                "./index.html",
+                "./src/**/*.{vue,js,jsx,ts,tsx}"
+            ],
+            theme: {
+                extend: {},
+            },
+            plugins: [],
+        }
+
+    4. Creamos el archivo de CSS de base con las "directivas" básicas de Tailwind. En carpeta /src
+
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+    5. Agregamos ese CSS al archivo de inicio de JS del proyecto. En /src/main.js
+        import './main.css';
+
+## Sistema de ruteo
+    1. npm install vue-router@4
+    2. Incluimos sistema de ruteo en raiz de proyecto
+        /src/router
+	        router.js
+
+## Instalación de firebase (npm)
+    1. npm i firebase
+    2. creamos carpeta servicios
+        /src/services
+            firebase.js (conexion con firebase)
+    3. agregamos Firestore
