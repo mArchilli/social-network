@@ -5,25 +5,43 @@ export default {
 </script>
 
 <template>
-    <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
-      <div class="w-full">
-        <div class="h-2.5 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[520px] mb-2.5"></div>
-        <div class="h-2 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5"></div>
-        <div class="h-2 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[580px] mb-2.5"></div>
-        <div class="h-2 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5"></div>
-        <div class="h-2 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[470px]"></div>
+  <div role="status" class="space-y-8 flex flex-col justify-center animate-pulse">
+
+    <!-- Skeleton para el Post -->
+    <div class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg mx-auto">
+      
+      <!-- Imagen del Post -->
+      <div class="relative">
+        <div class="w-full h-80 bg-beige-dark rounded-t-lg"></div>
       </div>
-      <div class="flex items-center justify-center w-full h-48 bg-beige-dark rounded sm:w-96 dark:bg-gray-700">
-        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"/>
-        </svg>
+
+      <!-- Contenido del Post -->
+      <div class="p-6 flex flex-col">
+        <!-- Header: Título y Usuario -->
+        <div class="mb-4">
+          <div class="h-4 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[300px] mb-2"></div> <!-- Título -->
+          <div class="flex items-center text-gray-500 text-sm">
+            <div class="h-3 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[150px] mb-1 mr-2"></div> <!-- Usuario -->
+            <span class="text-gray-400">•</span>
+            <div class="h-3 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[100px] mb-1 ml-2"></div> <!-- Fecha -->
+          </div>
+        </div>
+
+        <!-- Contenido del Post -->
+        <div class="h-2.5 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[460px] mb-3"></div> <!-- Contenido -->
+        <div class="h-2.5 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[470px] mb-3"></div> <!-- Contenido -->
+        <div class="h-2.5 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[480px] mb-3"></div> <!-- Contenido -->
+
+        <!-- Botón "Ver más" -->
+        <div class="h-10 bg-beige-dark rounded-full dark:bg-gray-700 max-w-[150px] mt-4"></div>
       </div>
-      <span class="sr-only">Loading...</span>
     </div>
-  </template>
-  
-  <style>
-  .bg-beige-dark {
-    background-color: #e0d8c7; /* Cambiar este valor al tono deseado */
-  }
-  </style>
+
+  </div>
+</template>
+
+<style>
+.bg-beige-dark {
+  background-color: #e0d8c7; /* Cambiar este valor al tono deseado */
+}
+</style>

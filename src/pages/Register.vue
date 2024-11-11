@@ -44,41 +44,55 @@ export default {
 </script>
 
 <template>
-  <div class="md:flex">
-    <div class="hidden md:block md:w-1/2">
-      <img :src="imagenSrc" class="w-full rounded-lg" alt="Imagen de LibraLink Logeo">
+  <div class="flex flex-col md:flex-row items-center">
+    <!-- Imagen de fondo solo visible en Desktop -->
+    <div class="hidden lg:block lg:w-1/2 h-full">
+      <img :src="imagenSrc" class="w-full h-full object-cover rounded-lg" alt="Imagen de LibraLink Registro">
     </div>
 
-    <div class="md:w-1/2 flex flex-col justify-stretch px-3">
-      <MainH1 class="text-center">Crear Cuenta</MainH1>
-      <MainH2 class="text-center mt-3">Registrate para disfrutar de nuestra red social</MainH2>
-      <form action="#" class="md:pt-24" @submit.prevent="handleSubmit">
-        <div class="mb-3">
-          <label for="email" class="block mb-2">Email</label>
-          <input type="email" id="email" class="w-full p-2 border border-gray-300 rounded disabled:bg-gray-100"
-            :disabled="loading" v-model="user.email">
+    <!-- Sección de Registro -->
+    <div class="w-full lg:w-1/2 px-6 md:px-12 lg:px-24 py-10 md:py-14 flex flex-col justify-center bg-white shadow-lg rounded-lg lg:mb-0 mb-6">
+      <MainH1 class="text-center text-3xl font-bold text-gray-800">Crear Cuenta</MainH1>
+      <MainH2 class="text-center mt-2 text-gray-500">Registrate para disfrutar de nuestra red social</MainH2>
+
+      <form action="#" class="mt-8 space-y-6" @submit.prevent="handleSubmit">
+        <div class="mb-5">
+          <label for="email" class="block mb-2 text-gray-700 font-medium">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 shadow-sm" 
+            v-model="user.email" 
+            :disabled="loading">
         </div>
 
-        <div class="mb-3">
-          <label for="password" class="block mb-2">Contraseña</label>
-          <input type="password" id="password" class="w-full p-2 border border-gray-300 rounded disabled:bg-gray-100"
-            :disabled="loading" v-model="user.password">
-          <!-- Mostrar mensaje de error debajo del campo de contraseña -->
-          <div v-if="errorMessage" class="error-message mt-2 text-red-600">
-            {{ errorMessage }}
-          </div>
+        <div class="mb-5">
+          <label for="password" class="block mb-2 text-gray-700 font-medium">Contraseña</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 shadow-sm" 
+            v-model="user.password" 
+            :disabled="loading">
         </div>
-        
-        <div class="mb-3">
+
+        <div class="mb-5">
           <input id="terms" type="checkbox" class="form-checkbox h-5 w-5" required/>
           <label for="terms" class="ml-2 text-gray-700">Acepto los términos y condiciones</label>
         </div>
 
-        <Divider></Divider>
+        <Divider />
 
-        <Button type="submit" class="w-full border mt-5" :isProcessing="loading">Crear cuenta</Button>
+        <div v-if="errorMessage" class="text-center text-red-600 mb-4">
+          {{ errorMessage }}
+        </div>
+
+        <Button type="submit" class="w-full py-2 mt-5 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 transition duration-200" :isProcessing="loading">
+          Crear cuenta
+        </Button>
+
         <router-link to="/iniciar-sesion">
-          <ButtonSecondary class="w-full border mt-5">
+          <ButtonSecondary class="w-full py-2 mt-5 bg-gray-500 text-black rounded-lg shadow hover:bg-gray-200 transition duration-200">
             Volver
           </ButtonSecondary>
         </router-link>
@@ -86,6 +100,7 @@ export default {
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .error-message {

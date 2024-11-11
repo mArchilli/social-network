@@ -50,7 +50,7 @@ export default {
     </div>
 
     <!-- Sección de Login -->
-    <div class="w-full lg:w-1/2 px-6 md:px-12 lg:px-24 py-10 md:py-16 lg:py-24 flex flex-col justify-center bg-white shadow-lg rounded-lg lg:mb-0 mb-6">
+    <div class="w-full lg:w-1/2 px-6 md:px-12 lg:px-24 py-10 md:py-24 flex flex-col justify-center bg-white shadow-lg rounded-lg lg:mb-0 mb-6">
       <MainH1 class="text-center text-3xl font-bold text-gray-800">Iniciar sesión</MainH1>
       <MainH2 class="text-center mt-2 text-gray-500">Bienvenido a LibraLink</MainH2>
       
@@ -86,7 +86,7 @@ export default {
         </Button>
 
         <router-link to="/registro">
-          <ButtonSecondary class="w-full py-2 mt-5 bg-gray-100 text-black rounded-lg shadow hover:bg-gray-200 transition duration-200">
+          <ButtonSecondary class="w-full py-2 mt-5 bg-gray-500 text-black rounded-lg shadow hover:bg-gray-200 transition duration-200">
             Registrarse
           </ButtonSecondary>
         </router-link>

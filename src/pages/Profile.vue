@@ -6,6 +6,7 @@ import Skeleton from '../components/Skeleton.vue';
 import LinkUser from '../components/LinkUser.vue';
 import { getPostsByUser } from '../services/post';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Divider from '../components/Divider.vue';
 
 export default {
   name: 'Profile',
@@ -90,9 +91,13 @@ export default {
       </div>
     </div>
 
+    <div class="w-full mb-10">
+      <Divider></Divider>
+    </div>
+
     <!-- Carga de posts -->
     <div v-if="loading">
-      <div v-for="post in 3" :key="post.id" class="mb-8">
+      <div v-for="n in 3" :key="n" class="mb-8">
         <Skeleton></Skeleton>
       </div>
     </div>
@@ -106,26 +111,44 @@ export default {
 
         <!-- Lista de posteos -->
         <MainH2 class="mt-10">Mis posteos</MainH2>
-        <div v-for="post in posts" :key="post.id">
-          <div class="flex flex-col mb-10 md:flex-row">
-            <div class="w-full md:w-2/4">
-              <MainH2>{{ post.title }}</MainH2>
-              <LinkUser @click="verUsuario(post.user_id)"> {{ post.email }}</LinkUser>
-              <p class="mx-2">{{ truncateContent(post.content) }}</p>
-
-              <!-- Contenedor de la imagen para dispositivos móviles -->
-              <div class="image-container md:hidden">
-                <img v-if="post.image_url" class="rounded w-full my-5" :alt="post.title" :src="post.image_url">
-              </div>
-
-              <Button @click="verPost(post.id)" class="w-full md:mt-36 md:w-1/4">Ver más</Button>
-              <div class="mt-3">
-                <p class="text-gray-600">{{ formatDate(post.created_at) }}</p>
-              </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div v-for="post in posts" :key="post.id" class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto">
+            
+            <!-- Post Image -->
+            <div class="relative">
+              <img 
+                v-if="post.image_url" 
+                :src="post.image_url" 
+                :alt="post.title" 
+                class="w-full h-80 object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
+              >
             </div>
-            <div class="hidden w-full md:w-2/4 md:block">
-              <!-- Renderizar imagen solo en dispositivos de pantalla grande -->
-              <img v-if="post.image_url" class="rounded h-72" :alt="post.title" :src="post.image_url">
+
+            <!-- Post Content -->
+            <div class="p-6 flex flex-col">
+              <!-- Header: Title and User Information -->
+              <div class="mb-4">
+                <MainH2 class="text-2xl font-bold mb-1">{{ post.title }}</MainH2>
+                <div class="flex items-center text-gray-500 text-sm">
+                  <LinkUser @click="verUsuario(post.user_id)" class="mr-2 hover:underline">
+                    {{ post.email }}
+                  </LinkUser>
+                  <span class="text-gray-400">•</span>
+                  <span class="ml-2">{{ formatDate(post.created_at) }}</span>
+                </div>
+              </div>
+
+              <!-- Post Content Text -->
+              <p class="text-gray-700 mb-6 leading-relaxed">
+                {{ truncateContent(post.content) }}
+              </p>
+
+              <!-- Footer with Button -->
+              <div class="mt-auto">
+                <Button @click="verPost(post.id)" class="w-full text-white transition-transform duration-200 transform hover:scale-105">
+                  Ver más
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -139,6 +162,8 @@ export default {
     </div>
   </div>
 </template>
+
+
 
 <style scoped>
 .success-message {

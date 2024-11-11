@@ -87,17 +87,17 @@ export default {
 
 <template>
   <div>
-    <div class="flex flex-col mb-10 sm:flex-row">
+    <div class="flex flex-col sm:flex-row">
       <div class="w-full sm:w-3/4">
-        <MainH1>Feed</MainH1>
+        <MainH1>Inicio</MainH1>
       </div>
       <div class="w-full sm:w-1/4">
-        <Button class="mb-4"><router-link to="/crear-post">Crear nuevo post</router-link></Button>
+        <Button><router-link to="/crear-post">Crear nuevo post</router-link></Button>
       </div>
     </div>
 
     <div class="w-full mb-10">
-        <Divider></Divider>
+      <Divider></Divider>
     </div>
 
     <!-- Mostrar mensaje de éxito si existe -->
@@ -106,42 +106,68 @@ export default {
     </div>
 
     <div v-if="loading">
-      <div v-for="post in 5" :key="post.id" class="mb-8">
+      <div v-for="n in 3" :key="n" class="mb-8">
         <Skeleton></Skeleton>
       </div>
     </div>
 
-    <div v-else>
-      <div v-for="post in truncatedPosts" :key="post.id">
-        <div class="flex flex-col mb-10 md:flex-row">
-          <div class="w-full md:w-2/4">
-            <MainH2>{{ post.title }}</MainH2>
-            <LinkUser @click="verUsuario(post.user_id)"> {{ post.email }}</LinkUser>
-            <p class="mr-2">{{ post.content }}</p>
-            
-            <!-- Contenedor de la imagen para dispositivos móviles -->
-            <div class="image-container md:hidden">
-              <img v-if="post.image_url" class="rounded w-full my-5" :alt="post.title" :src="post.image_url">
-            </div>
-            
-            <Button @click="verPost(post.id)" class="w-full md:mt-36 md:w-1/4">Ver más</Button>
-            <div class="mt-3">
-              <p class="text-gray-600">{{ formatDate(post.created_at) }}</p>
-            </div>
+    <!-- Mostrar los posts si ya están cargados -->
+    <div v-else-if="posts.length > 0">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div 
+          v-for="post in posts" 
+          :key="post.id" 
+          class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto"
+        >
+          <!-- Imagen del Post -->
+          <div class="relative">
+            <img 
+              v-if="post.image_url" 
+              :src="post.image_url" 
+              :alt="post.title" 
+              class="w-full h-80 object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
+            >
           </div>
-          <div class="hidden w-full md:w-2/4 md:block">
-            <!-- Renderizar imagen solo en dispositivos de pantalla grande -->
-            <img v-if="post.image_url" class="rounded h-72" :alt="post.title" :src="post.image_url">
-          </div>
-        </div>
 
-        <div class="w-full mb-10">
-            <Divider></Divider>
+          <!-- Contenido del Post -->
+          <div class="p-6 flex flex-col">
+            <!-- Título y Datos del Usuario -->
+            <div class="mb-4">
+              <MainH2 class="text-2xl font-bold mb-1">{{ post.title }}</MainH2>
+              <div class="flex items-center text-gray-500 text-sm">
+                <LinkUser @click="verUsuario(post.user_id)" class="mr-2 hover:underline">
+                  {{ post.email }}
+                </LinkUser>
+                <span class="text-gray-400">•</span>
+                <span class="ml-2">{{ formatDate(post.created_at) }}</span>
+              </div>
+            </div>
+
+            <!-- Texto del Post -->
+            <p class="text-gray-700 mb-6 leading-relaxed line-clamp-3">
+              {{ (post.content) }}
+            </p>
+
+            <!-- Botón para ver más -->
+            <div class="mt-auto">
+              <Button @click="verPost(post.id)" class="w-full text-white transition-transform duration-200 transform hover:scale-105">
+                Ver más
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Mensaje si no hay posts -->
+    <div v-else>
+      <p class="py-4">No tienes posteos aún.</p>
+      <Button><router-link to="/crear-post">Crear nuevo post</router-link></Button>
+    </div>
   </div>
 </template>
+
+
 
 <style scoped>
 .success-message {
