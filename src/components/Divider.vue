@@ -1,5 +1,5 @@
 <template>
-    <hr class="mt-5 border-t-2 border-[#ca8e5e] rounded-full">
+    <hr class="mt-5 border-t-2 border-green-700 rounded-full">
   </template>
   
   <script>

@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[
-      'px-4 py-2 font-bold text-white rounded bg-[#ca8e5e] hover:bg-[#a87049] focus:outline-none focus:ring-2 focus:ring-[#a87049] transition duration-200 ease-in-out inline-flex items-center justify-center', 
+      'px-4 py-2 font-bold text-white rounded bg-green-400 hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-[#a87049] transition duration-200 ease-in-out inline-flex items-center justify-center', 
       { 'cursor-not-allowed opacity-50': isProcessing }
     ]"
     :disabled="isProcessing"

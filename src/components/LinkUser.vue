@@ -1,6 +1,6 @@
 <template>
   <button
-    class="text-[#ca8e5e] hover:underline hover:text-[#a87049] transition duration-200 ease-in-out focus:outline-none"
+    class="text-green-400 hover:underline hover:text-green-600 transition duration-200 ease-in-out focus:outline-none"
   >
     <slot></slot>
   </button>
