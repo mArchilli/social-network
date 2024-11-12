@@ -113,7 +113,7 @@ export default {
 
     <!-- Mostrar los posts si ya están cargados -->
     <div v-else-if="posts.length > 0">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 gap-8">
         <div 
           v-for="post in posts" 
           :key="post.id" 
@@ -125,7 +125,7 @@ export default {
               v-if="post.image_url" 
               :src="post.image_url" 
               :alt="post.title" 
-              class="w-full h-80 object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
+              class="w-full object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
             >
           </div>
 

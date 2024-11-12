@@ -14,6 +14,7 @@
         'hover:shadow-lg': !isFocused
       }"
       rows="5"
+      maxlength="140"
     ></textarea>
   </div>
 </template>
