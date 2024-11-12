@@ -7,6 +7,7 @@ import CreateProfile from "../pages/CreateProfile.vue";
 import CreatePost from "../pages/CreatePost.vue";
 import UserProfile from "../pages/UserProfile.vue";
 import PasswordReset from "../pages/PasswordReset.vue";
+import NotFound from "../pages/NotFound.vue";
 import Post from "../pages/Post.vue"; 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -21,6 +22,8 @@ const routes = [
   { path: "/usuario/:id", component: UserProfile, meta: { requiresAuth: true } },
   { path: "/crear-perfil", component: CreateProfile, meta: { requiresAuth: true } },
   { path: "/update-password", component: PasswordReset, meta: { requiresAuth: true } },
+
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }
 ];
 
 const router = createRouter({

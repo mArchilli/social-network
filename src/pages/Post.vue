@@ -128,16 +128,25 @@ export default {
     }
   },
   async created() {
-    try {
-      this.currentUser = currentUser();
-      this.post = await getPost(this.postId);
+  try {
+    this.currentUser = currentUser();
+    // Intentamos obtener el post
+    this.post = await getPost(this.postId);
+    
+    // Si el post no se encuentra, redirigimos al usuario a la página 404
+    if (!this.post) {
+      this.$router.push({ name: 'NotFound' });
+    } else {
       this.loading = false;
       this.loadComments();
-    } catch (error) {
-      this.loading = false;
-      this.errorMessage = "El post no pudo ser encontrado.";
     }
+  } catch (error) {
+    this.loading = false;
+    this.errorMessage = "El post no pudo ser encontrado.";
+    // Si ocurre un error al obtener el post, redirigimos a la página 404
+    this.$router.push({ name: 'NotFound' });
   }
+}
 };
 </script>
 

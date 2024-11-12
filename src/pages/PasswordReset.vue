@@ -14,7 +14,8 @@ export default {
       newPassword: '',
       confirmPassword: '',
       loading: false,
-      errorMessage: ''
+      errorMessage: '',
+      successMessage: ''
     };
   },
   methods: {
@@ -57,19 +58,42 @@ export default {
 </script>
 
 <template>
-  <div>
-    <ButtonBack><router-link to="/perfil">Volver</router-link></ButtonBack>
-    <MainH1 class="text-3xl mb-4">Cambiar Contraseña</MainH1>
-    <MainH2 class="mb-2">Ingrese su nueva contraseña</MainH2>
+  <div class="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <ButtonBack class="text-gray-500 hover:text-gray-700">
+      <router-link to="/perfil">Volver</router-link>
+    </ButtonBack>
+    
+    <MainH1 class="text-3xl font-semibold text-center text-gray-800 my-6">Cambiar Contraseña</MainH1>
+
+    <MainH2 class="text-xl font-medium text-gray-700 mb-4">Ingrese su nueva contraseña</MainH2>
 
     <div class="mb-4">
-      <input type="password" v-model="newPassword" placeholder="Nueva Contraseña" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      <input 
+        type="password" 
+        v-model="newPassword" 
+        placeholder="Nueva Contraseña" 
+        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+      >
     </div>
+
     <div class="mb-4">
-      <input type="password" v-model="confirmPassword" placeholder="Confirmar Contraseña" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      <input 
+        type="password" 
+        v-model="confirmPassword" 
+        placeholder="Confirmar Contraseña" 
+        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+      >
     </div>
-    <div v-if="errorMessage" class="text-red-600 mb-4">{{ errorMessage }}</div>
-    <Button :isProcessing="loading" @click="updateUserPassword" class="w-full">
+
+    <div v-if="errorMessage" class="text-red-600 mb-4 p-2 bg-red-100 rounded-md">
+      {{ errorMessage }}
+    </div>
+
+    <div v-if="successMessage" class="text-green-600 mb-4 p-2 bg-green-100 rounded-md">
+      {{ successMessage }}
+    </div>
+
+    <Button :isProcessing="loading" @click="updateUserPassword" class="w-full bg-blue-600 text-white py-3 rounded-md text-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
       {{ loading ? 'Actualizando...' : 'Actualizar Contraseña' }}
     </Button>
   </div>
