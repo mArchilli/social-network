@@ -10,7 +10,6 @@ import PasswordReset from "../pages/PasswordReset.vue";
 import Post from "../pages/Post.vue"; 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-// Definimos las rutas de la aplicación
 const routes = [
   { path: "/", component: Login },
   { path: "/posts", component: Posts, meta: { requiresAuth: true } },
@@ -24,26 +23,31 @@ const routes = [
   { path: "/update-password", component: PasswordReset, meta: { requiresAuth: true } },
 ];
 
-// Creamos la instancia del router
 const router = createRouter({
   routes,
   history: createWebHashHistory(),
 });
 
-// Inicializamos el estado de usuario autenticado
 let authUser = { id: null, email: null };
 
-// Escuchamos los cambios en el estado de autenticación de Firebase
-onAuthStateChanged(getAuth(), (user) => {
-  if (user) {
-    authUser = { id: user.uid, email: user.email };
-  } else {
-    authUser = { id: null, email: null };
-  }
-});
+function checkAuthState() {
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        authUser = { id: user.uid, email: user.email };
+      } else {
+        authUser = { id: null, email: null };
+      }
+      unsubscribe(); // Detener la escucha después de obtener el estado inicial
+      resolve(authUser);
+    });
+  });
+}
 
-// Definimos la lógica de protección de rutas en `beforeEach`
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  // Esperar a que el estado de autenticación esté listo
+  await checkAuthState();
+
   // Verificar si la ruta requiere autenticación
   if (to.meta.requiresAuth && !authUser.id) {
     // Redirigir a iniciar sesión si no está autenticado
