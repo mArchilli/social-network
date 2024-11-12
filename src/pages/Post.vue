@@ -43,9 +43,9 @@ export default {
       newComment: '',
       isProcessing: false,
       currentUser: null,
-      showModal: false, // Estado para controlar la visibilidad de la modal
-      showCommentModal: false, // Estado para controlar la visibilidad de la modal para comentarios
-      commentToDelete: null // Almacena el índice del comentario a eliminar
+      showModal: false,
+      showCommentModal: false,
+      commentToDelete: null
     };
   },
   methods: {
@@ -95,16 +95,25 @@ export default {
     async confirmDeletePost() {
       try {
         await deletePost(this.postId);
-        this.$router.push('/posts'); // Redirigir a la lista de posts
+        this.$router.push('/posts');
       } catch (error) {
         console.error("Error al eliminar el post:", error);
       } finally {
-        this.showModal = false; // Ocultar la modal después de confirmar
+        this.showModal = false;
       }
     },
     confirmDeleteComment(index) {
       this.commentToDelete = index;
       this.showCommentModal = true;
+    },
+    formatDate(date) {
+      return Intl.DateTimeFormat('es', {
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit', 
+        hour: '2-digit', 
+        minute: '2-digit',
+      }).format(date);
     },
     async deleteComment() {
       try {
@@ -114,13 +123,13 @@ export default {
       } catch (error) {
         console.error("Error al eliminar el comentario:", error);
       } finally {
-        this.showCommentModal = false; // Ocultar la modal después de confirmar
+        this.showCommentModal = false;
       }
     }
   },
   async created() {
     try {
-      this.currentUser = currentUser(); // Obtener el usuario actual
+      this.currentUser = currentUser();
       this.post = await getPost(this.postId);
       this.loading = false;
       this.loadComments();
@@ -133,74 +142,82 @@ export default {
 </script>
 
 <template>
-  <div v-if="post">
-    <div class="flex items-center justify-between mb-6">
-      <ButtonBack><router-link to="/posts">Volver</router-link></ButtonBack>
-      <DeleteButton class="bg-red" v-if="currentUser && currentUser.id === post.user_id" @click="showModal = true">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-          <path fill="#ffffff" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zm0 5h2v9H9zm4 0h2v9h-2z"/>
-        </svg>
-      </DeleteButton>
-    </div>
-    <div class="flex flex-col md:flex-row">
-      <div class="w-full md:w-5/6">
-        <MainH1>{{ post.title }}</MainH1>
-        <LinkUser class="mb-5" @click="verUsuario(post.user_id)"> {{ post.email }}</LinkUser>
-        <p>{{ post.content }}</p>
-      </div>
-      <div class="w-full md:w-1/5" v-if="post.image_url">
-        <img class="w-full mt-4 rounded-lg lg:mt-0" :alt="post.title" :src="post.image_url">
+  <div v-if="post" class="container mx-auto p-6 space-y-10 bg-gray-50 rounded-lg shadow-lg">
+    <!-- Post Header -->
+    <div class="text-center">
+      <ButtonBack class="text-gray-700"><router-link to="/posts">Volver</router-link></ButtonBack>
+      <MainH1 class="text-4xl font-bold">{{ post.title }}</MainH1>
+      <p class="text-gray-500 mt-2">{{ formatDate(post.created_at) }} por <LinkUser @click="verUsuario(post.user_id)">{{ post.email }}</LinkUser></p>
+      <div class="flex justify-center mt-4 space-x-4">
+        <DeleteButton 
+          v-if="currentUser && currentUser.id === post.user_id" 
+          @click="showModal = true" 
+          class="bg-red-600 text-white px-3 py-2 rounded-md"
+        >
+          Eliminar Post
+        </DeleteButton>
       </div>
     </div>
 
-    <Divider class="mb-5"></Divider>
+    <!-- Post Content -->
+    <div class="prose lg:prose-lg mx-auto">
+      <p>{{ post.content }}</p>
+      <img v-if="post.image_url" :src="post.image_url" :alt="post.title" class="rounded-lg shadow-md mt-4">
+    </div>
 
-    <div class="flex flex-col">
-      <div class="w-full px-3 mb-5">
-        <MainH2>Deja tu comentario</MainH2>
-        <TextAreaComment placeholder="Escribe aquí" v-model="newComment"></TextAreaComment>
-        <div class="flex justify-end">
-          <Button :isProcessing="isProcessing" @click="submitComment">Comentar</Button>
-        </div>
+    <!-- Divider -->
+    <Divider />
 
+    <!-- Comments Section -->
+    <section class="bg-white p-6 rounded-lg shadow-md">
+      <MainH2>Deja un comentario</MainH2>
+      <TextAreaComment v-model="newComment" placeholder="Escribe tu comentario aquí..." />
+      <div class="flex justify-end mt-2">
+        <Button :isProcessing="isProcessing" @click="submitComment">Enviar</Button>
       </div>
-      <div class="w-full px-3 mb-5" v-if="comments.length > 0">
+
+      <!-- Comments List -->
+      <div v-if="comments.length" class="mt-8 space-y-6">
         <MainH2>Comentarios</MainH2>
-        <div v-for="(comment, index) in comments" :key="index" class="">
-          <div>
-            <Comment>
-              <p>{{ comment.text }}</p>
-              <p class="mt-2 text-sm text-gray-600">Fecha: {{ comment.created_at.toLocaleDateString() }} Hora: {{
-                comment.created_at.toLocaleTimeString() }}</p>
-              <p class="text-sm text-gray-600">Usuario: {{ comment.email }}</p>
-            </Comment>
+        <div v-for="(comment, index) in comments" :key="index" class="bg-gray-100 p-4 rounded-lg shadow-md">
+          <p>{{ comment.text }}</p>
+          <p class="text-sm text-gray-500 mt-1">{{ formatDate(post.created_at) }} - <LinkUser @click="verUsuario(comment.user_id)">{{ comment.email }}</LinkUser></p>
+          <div v-if="currentUser && currentUser.id === comment.user_id" class="text-right">
+            <DeleteButton @click="confirmDeleteComment(index)">Eliminar</DeleteButton>
           </div>
-          <div class="flex justify-end py-4">
-            <DeleteButton v-if="currentUser && currentUser.id === comment.user_id" class="ml-2 bg-red"
-              @click="confirmDeleteComment(index)">
-              Eliminar
-            </DeleteButton>
-          </div>
-
         </div>
       </div>
-    </div>
+    </section>
 
-    <Modal :show="showModal" title="Confirmar eliminación" message="¿Estás seguro de que deseas eliminar este post?"
-      @close="showModal = false" @confirm="confirmDeletePost" />
-
-    <Modal :show="showCommentModal" title="Confirmar eliminación de comentario"
-      message="¿Estás seguro de que deseas eliminar este comentario?" @close="showCommentModal = false"
-      @confirm="deleteComment" />
+    <!-- Modals -->
+    <Modal 
+      :show="showModal" 
+      title="Confirmar eliminación" 
+      message="¿Estás seguro de que deseas eliminar este post?" 
+      @close="showModal = false" 
+      @confirm="confirmDeletePost" 
+    />
+    <Modal 
+      :show="showCommentModal" 
+      title="Confirmar eliminación de comentario" 
+      message="¿Estás seguro de que deseas eliminar este comentario?" 
+      @close="showCommentModal = false" 
+      @confirm="deleteComment" 
+    />
   </div>
 
-  <div v-else>
+  <!-- Loading/Error State -->
+  <div v-else class="text-center p-10">
     <Spinner v-if="loading" />
-    <p v-else>{{ errorMessage }}</p>
-    <!-- <router-link to="/posts">Volver a la página principal</router-link> -->
+    <p v-else class="text-red-500">{{ errorMessage }}</p>
   </div>
 </template>
 
 <style scoped>
-
+.container {
+  max-width: 800px;
+}
+.prose p {
+  color: #333;
+}
 </style>
