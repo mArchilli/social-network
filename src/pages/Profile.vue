@@ -82,13 +82,12 @@ export default {
       {{ successMessage }}
     </div>
 
-    <!-- Encabezado del perfil -->
-    <div class="flex items-center justify-between">
-      <div>
-        <MainH1>Mi Perfil</MainH1>
+    <div class="flex flex-col sm:flex-row">
+      <div class="w-full sm:w-3/4">
+        <MainH1 class="text-center sm:text-left">Mi Perfil</MainH1>
       </div>
-      <div>
-        <Button><router-link to="/update-password">Cambiar clave</router-link></Button>
+      <div class="w-full sm:text-right">
+        <Button class="w-full sm:w-auto"><router-link to="/update-password">Cambiar clave</router-link></Button>
       </div>
     </div>
 

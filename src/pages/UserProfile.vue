@@ -4,13 +4,14 @@ import MainH2 from '../components/MainH2.vue';
 import Button from '../components/Button.vue';
 import Skeleton from '../components/Skeleton.vue';
 import LinkUser from '../components/LinkUser.vue';
+import Divider from '../components/Divider.vue';
 import { getUserProfileById } from '../services/user_profile';
 import { getPostsByUser } from '../services/post';
 import { getAuth } from "firebase/auth";
 
 export default {
   name: 'UserProfile',
-  components: { MainH1, MainH2, Button, LinkUser, Skeleton },
+  components: { MainH1, MainH2, Button, LinkUser, Skeleton, Divider },
   data() {
     return {
       user: {
@@ -65,43 +66,86 @@ export default {
 </script>
 
 <template>
-    <div>
-      <MainH1>Perfil de usuario {{ user.email }}</MainH1>
-      <p>{{ user.nombre }}</p>
-  
+  <div>
+    <!-- Encabezado de perfil -->
+    <div class="flex items-center justify-between">
       <div>
-        <MainH2 class="mt-10">Posteos:</MainH2>
-      </div>
-      <div v-if="loading">
-        <div v-for="n in 3" :key="n" class="mb-8">
-          <Skeleton></Skeleton>
-        </div>
-      </div>
-      <div v-else-if="errorMessage">{{ errorMessage }}</div>
-      <div v-else>
-        <div v-for="post in posts" :key="post.id">
-          <div class="flex flex-col mb-10 md:flex-row">
-          <div class="w-full md:w-2/4">
-            <MainH2>{{ post.title }}</MainH2>
-            <LinkUser @click="verUsuario(post.user_id)"> {{ post.email }}</LinkUser>
-            <p class="mr-2">{{ post.content }}</p>
-            
-            <!-- Contenedor de la imagen para dispositivos móviles -->
-            <div class="image-container md:hidden">
-              <img v-if="post.image_url" class="rounded w-full my-5" :alt="post.title" :src="post.image_url">
-            </div>
-            
-            <Button @click="verPost(post.id)" class="w-full md:mt-36 md:w-1/4">Ver más</Button>
-            <div class="mt-3">
-              <p class="text-gray-600">{{ formatDate(post.created_at) }}</p>
-            </div>
-          </div>
-          <div class="hidden w-full md:w-2/4 md:block">
-            <!-- Renderizar imagen solo en dispositivos de pantalla grande -->
-            <img v-if="post.image_url" class="rounded h-72" :alt="post.title" :src="post.image_url">
-          </div>
-        </div>
-        </div>
+        <MainH1>Perfil de {{ user.email }}</MainH1>
       </div>
     </div>
-  </template>
+
+    <!-- Descripción del usuario -->
+    <div class="my-4">
+      <p>{{ user.nombre }}</p>
+    </div>
+
+    <div class="w-full mb-10">
+      <Divider></Divider>
+    </div>
+
+    <!-- Carga de posteos -->
+    <div v-if="loading">
+      <div v-for="n in 3" :key="n" class="mb-8">
+        <Skeleton></Skeleton>
+      </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div v-else-if="errorMessage">{{ errorMessage }}</div>
+
+    <!-- Contenido del perfil -->
+    <div v-else>
+      <div v-if="posts.length > 0">
+        <!-- Lista de posteos -->
+        <MainH2 class="mt-10">Posteos</MainH2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div v-for="post in posts" :key="post.id" class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto">
+            
+            <!-- Post Image -->
+            <div class="relative">
+              <img 
+                v-if="post.image_url" 
+                :src="post.image_url" 
+                :alt="post.title" 
+                class="w-full h-80 object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
+              >
+            </div>
+
+            <!-- Post Content -->
+            <div class="p-6 flex flex-col">
+              <!-- Header: Title and User Information -->
+              <div class="mb-4">
+                <MainH2 class="text-2xl font-bold mb-1">{{ post.title }}</MainH2>
+                <div class="flex items-center text-gray-500 text-sm">
+                  <LinkUser @click="verUsuario(post.user_id)" class="mr-2 hover:underline">
+                    {{ post.email }}
+                  </LinkUser>
+                  <span class="text-gray-400">•</span>
+                  <span class="ml-2">{{ formatDate(post.created_at) }}</span>
+                </div>
+              </div>
+
+              <!-- Post Content Text -->
+              <p class="text-gray-700 mb-6 leading-relaxed line-clamp-3">
+                {{ post.content }}
+              </p>
+
+              <!-- Footer with Button -->
+              <div class="mt-auto">
+                <Button @click="verPost(post.id)" class="w-full text-white transition-transform duration-200 transform hover:scale-105">
+                  Ver más
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje si el usuario no tiene posteos -->
+      <div v-else>
+        <p class="py-4">No tienes posteos aún.</p>
+        <Button><router-link to="/crear-post">Crear nuevo post</router-link></Button>
+      </div>
+    </div>
+  </div>
+</template>

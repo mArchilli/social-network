@@ -89,10 +89,10 @@ export default {
   <div>
     <div class="flex flex-col sm:flex-row">
       <div class="w-full sm:w-3/4">
-        <MainH1>Inicio</MainH1>
+        <MainH1 class="text-center sm:text-left">Inicio</MainH1>
       </div>
-      <div class="w-full sm:w-1/4">
-        <Button><router-link to="/crear-post">Crear nuevo post</router-link></Button>
+      <div class="w-full sm:text-right">
+        <Button class="w-full sm:w-auto"><router-link to="/crear-post">Crear nuevo post</router-link></Button>
       </div>
     </div>
 
