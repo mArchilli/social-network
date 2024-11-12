@@ -4,13 +4,14 @@ import MainH2 from '../components/MainH2.vue';
 import Button from '../components/Button.vue';
 import Skeleton from '../components/Skeleton.vue';
 import LinkUser from '../components/LinkUser.vue';
+import Divider from '../components/Divider.vue';
 import { getPostsByUser } from '../services/post';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Divider from '../components/Divider.vue';
+
 
 export default {
   name: 'Profile',
-  components: { MainH1, MainH2, Button, LinkUser, Skeleton },
+  components: { MainH1, MainH2, Button, LinkUser, Skeleton, Divider },
   data() {
     return {
       posts: [],

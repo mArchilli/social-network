@@ -7,10 +7,10 @@ import CreateProfile from "../pages/CreateProfile.vue";
 import CreatePost from "../pages/CreatePost.vue";
 import UserProfile from "../pages/UserProfile.vue";
 import PasswordReset from "../pages/PasswordReset.vue";
-
 import Post from "../pages/Post.vue"; 
-import { subscribeToAuth } from "../services/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+// Definimos las rutas de la aplicación
 const routes = [
   { path: "/", component: Login },
   { path: "/posts", component: Posts, meta: { requiresAuth: true } },
@@ -24,25 +24,37 @@ const routes = [
   { path: "/update-password", component: PasswordReset, meta: { requiresAuth: true } },
 ];
 
+// Creamos la instancia del router
 const router = createRouter({
   routes,
   history: createWebHashHistory(),
 });
 
-let authUser = {
-  id: null,
-  email: null,
-}
+// Inicializamos el estado de usuario autenticado
+let authUser = { id: null, email: null };
 
-subscribeToAuth(newUserData => authUser = newUserData);
-
-// Limitamos posts (prueba. TODO: completar otras rutas.
-router.beforeEach((to, from) =>{
-  if(authUser.id === null && to.meta.requiresAuth){
-    return  {
-      path: '/iniciar-sesion',
-    };
+// Escuchamos los cambios en el estado de autenticación de Firebase
+onAuthStateChanged(getAuth(), (user) => {
+  if (user) {
+    authUser = { id: user.uid, email: user.email };
+  } else {
+    authUser = { id: null, email: null };
   }
-})
+});
+
+// Definimos la lógica de protección de rutas en `beforeEach`
+router.beforeEach((to, from, next) => {
+  // Verificar si la ruta requiere autenticación
+  if (to.meta.requiresAuth && !authUser.id) {
+    // Redirigir a iniciar sesión si no está autenticado
+    next({ path: '/iniciar-sesion' });
+  } else if ((to.path === '/iniciar-sesion' || to.path === '/registro') && authUser.id) {
+    // Si el usuario está autenticado, redirigir al perfil desde las rutas de inicio de sesión o registro
+    next({ path: '/perfil' });
+  } else {
+    // Continuar con la navegación normalmente
+    next();
+  }
+});
 
 export default router;
