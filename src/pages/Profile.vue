@@ -110,8 +110,8 @@ export default {
       <div v-if="posts.length > 0">
 
         <!-- Lista de posteos -->
-        <MainH2 class="mt-10">Mis posteos</MainH2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <MainH2 class="text-center sm:text-left">Mis posteos</MainH2>
+        <div class="grid grid-cols-1 gap-8">
           <div v-for="post in posts" :key="post.id" class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto">
             
             <!-- Post Image -->
@@ -120,7 +120,7 @@ export default {
                 v-if="post.image_url" 
                 :src="post.image_url" 
                 :alt="post.title" 
-                class="w-full h-80 object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
+                class="w-full object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
               >
             </div>
 
