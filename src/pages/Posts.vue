@@ -117,7 +117,7 @@ export default {
         <div 
           v-for="post in posts" 
           :key="post.id" 
-          class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto"
+          class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto flex flex-col justify-between"
         >
           <!-- Imagen del Post -->
           <div class="relative">

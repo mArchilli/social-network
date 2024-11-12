@@ -29,10 +29,37 @@ export default {
     };
   },
   methods: {
+    // Función para manejar el cambio de imagen
     handleImageChange(event) {
       const file = event.target.files[0];
+      
+      // Limitar el tamaño máximo de la imagen a 5MB (5 * 1024 * 1024 bytes)
+      const MAX_SIZE = 5 * 1024 * 1024;
+
+      // Extensiones permitidas
+      const allowedExtensions = ['jpg', 'jpeg', 'png', 'heic'];
+
+      // Verificar que el archivo tenga la extensión correcta
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
+        this.errorMessage = 'Formato de imagen no permitido. Solo se permiten archivos JPG, JPEG, PNG o HEIC.';
+        this.newPost.image = null;  // Limpiar la imagen seleccionada
+        return;
+      }
+
+      // Verificar el tamaño del archivo
+      if (file.size > MAX_SIZE) {
+        this.errorMessage = 'La imagen es demasiado grande. El tamaño máximo permitido es 5MB.';
+        this.newPost.image = null;  // Limpiar la imagen seleccionada
+        return;
+      }
+
+      // Si todo está bien, asignar la imagen
       this.newPost.image = file;
+      this.errorMessage = ''; // Limpiar mensaje de error
     },
+
+    // Función para enviar el post
     async submitPost() {
       this.sendingPost = true;
       this.errorMessage = ''; 
@@ -71,7 +98,7 @@ export default {
   mounted() {
     this.unsubscribeFromAuth = subscribeToAuth(newUserData => this.authUser = newUserData);
   },
-  unmounted(){
+  unmounted() {
     this.unsubscribeFromAuth();
   }
 }
@@ -79,33 +106,62 @@ export default {
 
 <template>
   <div>
+    <!-- Botón para volver -->
     <div class="mb-3">
       <ButtonBack><router-link to="/posts">Volver</router-link></ButtonBack>
     </div>
+
+    <!-- Título principal -->
     <MainH1 class="text-3xl mb-6">Nuevo post</MainH1>
+
+    <!-- Formulario para crear un post -->
     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <form @submit.prevent="submitPost">
+        
+        <!-- Campo para el título -->
         <div class="mb-4">
           <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Título:</label>
-          <input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                 id="title" type="text" placeholder="Ingresa el título" v-model="newPost.title" required>
+          <input 
+            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+            id="title" 
+            type="text" 
+            placeholder="Ingresa el título" 
+            v-model="newPost.title" 
+            required
+          >
         </div>
+
+        <!-- Campo para seleccionar la imagen -->
         <div class="mb-4">
           <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Imagen:</label>
-          <input type="file" id="image" @change="handleImageChange" accept="image/*" 
-                 class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <input 
+            type="file" 
+            id="image" 
+            @change="handleImageChange" 
+            accept="image/*" 
+            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
         </div>
+
+        <!-- Mensaje de error para imagen -->
+        <div v-if="errorMessage" class="text-center text-red-600 mb-4">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Campo para el contenido del post -->
         <div class="mb-6">
           <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Contenido:</label>
-          <TextAreaComment aria-placeholder="Escribe aquí" v-model="newPost.content" />
+          <TextAreaComment 
+            aria-placeholder="Escribe aquí" 
+            v-model="newPost.content" 
+          />
         </div>
+
+        <!-- Botón para publicar el post -->
         <Button :isProcessing="sendingPost" type="submit" class="w-full">
           {{ sendingPost ? 'Publicando...' : 'Publicar' }}
         </Button>
       </form>
-    </div>
-    <div v-if="errorMessage" class="text-center text-red-600">
-      {{ errorMessage }}
     </div>
   </div>
 </template>

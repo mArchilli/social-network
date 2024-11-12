@@ -101,8 +101,9 @@ export default {
       <router-view />
     </main>
 
-    <footer class="flex items-center justify-center text-white h-footer bg-black">
+    <footer class="flex flex-col md:flex-row md:space-x-10 items-center justify-center text-white h-footer bg-black">
       <p>Copyright &copy; LibraLink 2024</p>
+      <p>Desarrollado por Archilli Matias</p>
     </footer>
 
   </div>
