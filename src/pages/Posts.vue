@@ -92,7 +92,7 @@ export default {
         <MainH1 class="text-center sm:text-left">Inicio</MainH1>
       </div>
       <div class="w-full sm:text-right">
-        <Button class="w-full sm:w-auto"><router-link to="/crear-post">Crear nuevo post</router-link></Button>
+        <Button class="w-full sm:w-auto"><router-link to="/crear-post">Nuevo post</router-link></Button>
       </div>
     </div>
 
