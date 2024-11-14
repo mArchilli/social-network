@@ -19,7 +19,7 @@ const routes = [
   { path: "/perfil", component: Profile, meta: { requiresAuth: true } },
   { path: "/posts/:postId", name: "Post", component: Post, props: true, meta: { requiresAuth: true } },
   { path: "/crear-post", component: CreatePost, meta: { requiresAuth: true } },
-  { path: "/usuario/:id", component: UserProfile, meta: { requiresAuth: true } },
+  { path: "/usuario/:id", name: "UserProfile", component: UserProfile, meta: { requiresAuth: true } },
   { path: "/crear-perfil", component: CreateProfile, meta: { requiresAuth: true } },
   { path: "/update-password", component: PasswordReset, meta: { requiresAuth: true } },
 

@@ -25,19 +25,26 @@ export default {
     };
   },
   async mounted() {
-    try {
-      // Datos de perfil de usuario. Sacamos el id del usuario desde la URL.
-      this.user = await getUserProfileById(this.$route.params.id);
+  try {
+    // Obtener el ID del usuario desde la ruta
+    const userId = this.$route.params.id;
+    // console.log("User ID from route:", userId);
 
-      // Obtener los posteos del usuario
-      this.posts = await getPostsByUser(this.user.id);
+    // Obtener datos de perfil de usuario
+    this.user = await getUserProfileById(userId);
+    // console.log("User data:", this.user);
 
-      this.loading = false;
-    } catch (error) {
-      this.loading = false;
-      this.errorMessage = 'No se pudieron cargar los datos del usuario o sus posts';
-    }
-  },
+    // Obtener los posteos del usuario
+    this.posts = await getPostsByUser(this.user.id);
+    // console.log("User posts:", this.posts);
+
+    this.loading = false;
+  } catch (error) {
+    this.loading = false;
+    this.errorMessage = 'No se pudieron cargar los datos del usuario o sus posts';
+    // console.error("Error al cargar datos del usuario o posts:", error);
+  }
+},
   methods: {
     verUsuario(userId) {
       const auth = getAuth();

@@ -43,14 +43,14 @@ export default {
       const auth = getAuth();
       const currentUser = auth.currentUser;
 
-      console.log("CurrentUser: ", currentUser)
-      console.log("CurrentUser: ", currentUser.uid)
+      // console.log("CurrentUser: ", currentUser)
+      // console.log("CurrentUser: ", currentUser.uid)
 
       // Asegúrate de que userId y currentUser.uid sean del mismo tipo de dato (string)
       if (currentUser && currentUser.uid === String(userId)) {
         this.$router.push({ path: '/perfil' });
       } else {
-        this.$router.push({ path: `/usuario/${userId}`, params: { userId: userId } });
+        this.$router.push({ name: 'UserProfile', params: { id: userId } });
       }
     }
   },
@@ -59,11 +59,11 @@ export default {
     try {
       this.posts = await postList();
       this.loading = false;
-      console.log("Posts obtenidos:", this.posts);
+      // console.log("Posts obtenidos:", this.posts);
     } catch (error) {
       this.loading = false;
       this.errorMessage = "Hubo un error al cargar las publicaciones. Por favor, inténtalo de nuevo más tarde.";
-      console.error("Error al obtener los posts:", error);
+      // console.error("Error al obtener los posts:", error);
     }
   },
 
