@@ -86,8 +86,8 @@ export default {
 </script>
 
 <template>
-  <div>
-    <div class="flex flex-col sm:flex-row">
+  <div class="p-10">
+    <div class="flex flex-col sm:flex-row ">
       <div class="w-full sm:w-3/4">
         <MainH1 class="text-center sm:text-left">Inicio</MainH1>
       </div>

@@ -73,7 +73,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="p-10">
     <!-- Encabezado de perfil -->
     <div class="flex items-center justify-between">
       <div>

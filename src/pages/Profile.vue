@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-10">
     <!-- Mensaje de éxito -->
     <div 
       v-if="successMessage" 
@@ -96,7 +96,7 @@
     <div 
       v-if="showPreview" 
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white p-4 rounded shadow-lg">
+      <div class=" rounded shadow-lg">
         <button 
           class="absolute top-4 right-4 text-gray-500 hover:text-black" 
           @click="closePreview">
@@ -105,7 +105,7 @@
         <img 
           :src="profile.image_url" 
           alt="Previsualización de la foto" 
-          class="max-w-lg max-h-[80vh]" />
+          class="max-w-[90%] max-h-[80vh] mx-auto rounded" />
       </div>
     </div>
   </div>
