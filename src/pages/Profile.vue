@@ -8,7 +8,7 @@
     </div>
 
     <!-- Título y botón para cambiar clave -->
-    <div class="flex flex-col sm:flex-row mb-6">
+    <div class="flex flex-col sm:flex-row mb-6 items-center">
       <div class="w-full sm:w-3/4">
         <MainH1 class="text-center sm:text-left hidden">Mi Perfil</MainH1>
         <ButtonBack class="text-gray-700 py-5">
@@ -83,7 +83,7 @@
               <h3 class="text-xl font-bold">{{ post.title }}</h3>
               <p class="text-gray-500">{{ formatDate(post.created_at) }}</p>
               <p class="my-2">{{ truncateContent(post.content) }}</p>
-              <Button @click="verPost(post.id)">Ver más</Button>
+              <Button @click="verPost(post.id)" class="w-full">Ver más</Button>
             </div>
           </div>
         </div>
