@@ -97,7 +97,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="p-10">
     <MainH1>Crear Perfil</MainH1>
     <form @submit.prevent="handleSubmit">
 

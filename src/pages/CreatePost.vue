@@ -105,7 +105,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="p-10">
     <!-- Botón para volver -->
     <div class="mb-3">
       <ButtonBack><router-link to="/posts">Volver</router-link></ButtonBack>

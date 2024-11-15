@@ -9,7 +9,7 @@
       <ButtonBack class="text-gray-700">
         <router-link to="/posts">Volver</router-link>
       </ButtonBack>
-      <MainH1 class="text-2xl sm:text-4xl font-bold">{{ post.title }}</MainH1>
+      <MainH1 class="text-2xl sm:text-4xl font-bold py-5">{{ post.title }}</MainH1>
       <p class="text-gray-500 mt-2 text-sm sm:text-base">
         {{ formatDate(post.created_at) }} por 
         <LinkUser @click="verUsuario(post.user_id)">{{ post.email }}</LinkUser>

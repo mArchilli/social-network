@@ -134,7 +134,7 @@ export default {
             <!-- Título y Datos del Usuario -->
             <div class="mb-4">
               <MainH2 class="text-2xl font-bold mb-1">{{ post.title }}</MainH2>
-              <div class="flex items-center text-gray-500 text-sm">
+              <div class="flex items-center flex-wrap text-gray-500 text-sm">
                 <LinkUser @click="verUsuario(post.user_id)" class="mr-2 hover:underline">
                   {{ post.email }}
                 </LinkUser>
