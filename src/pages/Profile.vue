@@ -10,16 +10,17 @@
     <!-- Título y botón para cambiar clave -->
     <div class="flex flex-col sm:flex-row mb-6">
       <div class="w-full sm:w-3/4">
-        <MainH1 class="text-center sm:text-left">Mi Perfil</MainH1>
+        <MainH1 class="text-center sm:text-left hidden">Mi Perfil</MainH1>
+        <ButtonBack class="text-gray-700 py-5">
+          <router-link to="/posts">Volver</router-link>
+        </ButtonBack>
       </div>
       <div class="w-full sm:text-right">
         <Button>
           <router-link to="/update-password">Cambiar clave</router-link>
         </Button>
       </div>
-    </div>
-
-    <Divider />
+    </div>    
 
     <!-- Estado de carga o error -->
     <div v-if="loading" class="mt-6">
@@ -32,33 +33,38 @@
     <!-- Información del perfil -->
     <div v-else>
       <section v-if="profile" class="mb-10">
-        <MainH2>Información de mi perfil</MainH2>
-        <div class="p-4 border rounded-lg shadow-md bg-gray-100 flex items-center space-x-4">
-          <!-- Imagen del usuario -->
-          <div class="w-20 h-20">
-            <img 
-              v-if="profile.image_url" 
-              :src="profile.image_url" 
-              alt="Foto de perfil" 
-              class="w-full h-full object-cover rounded-full border-2 shadow-sm cursor-pointer" 
-              @click="openPreview" 
-            />
-            <div 
-              v-else 
-              class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 rounded-full border-2 shadow-sm">
-              Sin foto
-            </div>
-          </div>
+  <!-- <MainH2 class="text-center text-2xl font-semibold mb-6">Información de mi perfil</MainH2> -->
 
-          <!-- Detalles del perfil -->
-          <div>
-            <p><strong>Email:</strong> {{ profile.email }}</p>
-            <p v-if="profile.nombre"><strong>Nombre:</strong> {{ profile.nombre }}</p>
-            <p v-if="profile.biografia"><strong>Biografía:</strong> {{ profile.biografia }}</p>
-            <p v-if="profile.genero"><strong>Género:</strong> {{ profile.genero }}</p>
-          </div>
-        </div>
-      </section>
+  <div class="flex items-center justify-center space-x-6 p-6 border rounded-lg shadow-md bg-white">
+    
+    <!-- Imagen del usuario -->
+    <div class="w-24 h-24 md:w-32 md:h-32">
+      <img 
+        v-if="profile.image_url" 
+        :src="profile.image_url" 
+        alt="Foto de perfil" 
+        class="w-full h-full object-cover rounded-full border-4 border-white shadow-lg cursor-pointer"
+        @click="openPreview" 
+      />
+      <div 
+        v-else 
+        class="w-full h-full flex items-center justify-center bg-gray-300 text-white font-semibold rounded-full border-4 border-white shadow-lg">
+        Sin foto
+      </div>
+    </div>
+
+    <!-- Detalles del perfil -->
+    <div class="flex flex-col justify-center">
+      <!-- <p class="text-lg font-medium"><strong>Email:</strong> {{ profile.email }}</p> -->
+      <p v-if="profile.nombre" class="text-sm text-black mt-2"><strong>{{ profile.nombre }}</strong></p>
+      <p v-if="profile.biografia" class="text-sm text-gray-700 mt-2">{{ profile.biografia }}</p>
+      <!-- <p v-if="profile.genero" class="text-sm text-gray-700 mt-2"><strong>Género:</strong> {{ profile.genero }}</p> -->
+    </div>
+  </div>
+</section>
+
+
+      <Divider />
 
       <!-- Lista de posteos -->
       <section v-if="posts.length > 0">
@@ -84,8 +90,8 @@
       </section>
 
       <!-- Mensaje si no hay posteos -->
-      <section v-else class="text-center">
-        <p>No tienes posteos aún.</p>
+      <section v-else class="text-center space-y-5">
+        <p class="pt-10">No tienes posteos aún.</p>
         <Button>
           <router-link to="/crear-post">Crear nuevo post</router-link>
         </Button>
@@ -117,13 +123,14 @@ import MainH2 from "../components/MainH2.vue";
 import Button from "../components/Button.vue";
 import Skeleton from "../components/Skeleton.vue";
 import Divider from "../components/Divider.vue";
+import ButtonBack from '../components/ButtonBack.vue';
 import { getPostsByUser } from "../services/post";
 import { getUserProfile } from "../services/user";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default {
   name: "Profile",
-  components: { MainH1, MainH2, Button, Skeleton, Divider },
+  components: { MainH1, MainH2, Button, Skeleton, Divider, ButtonBack },
   data() {
     return {
       profile: null,
