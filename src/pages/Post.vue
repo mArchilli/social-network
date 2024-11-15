@@ -1,10 +1,15 @@
 <template>
-  <div v-if="post" class="container mx-auto p-6 space-y-10 bg-gray-50 rounded-lg shadow-lg">
+  <div v-if="post" class="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
     <!-- Post Header -->
     <div class="text-center">
-      <ButtonBack class="text-gray-700"><router-link to="/posts">Volver</router-link></ButtonBack>
+      <ButtonBack class="text-gray-700">
+        <router-link to="/posts">Volver</router-link>
+      </ButtonBack>
       <MainH1 class="text-4xl font-bold">{{ post.title }}</MainH1>
-      <p class="text-gray-500 mt-2">{{ formatDate(post.created_at) }} por <LinkUser @click="verUsuario(post.user_id)">{{ post.email }}</LinkUser></p>
+      <p class="text-gray-500 mt-2">
+        {{ formatDate(post.created_at) }} por 
+        <LinkUser @click="verUsuario(post.user_id)">{{ post.email }}</LinkUser>
+      </p>
       <div class="flex justify-center mt-4 space-x-4">
         <DeleteButton 
           v-if="currentUser && currentUser.id === post.user_id" 
@@ -19,7 +24,34 @@
     <!-- Post Content -->
     <div class="prose lg:prose-lg mx-auto">
       <p>{{ post.content }}</p>
-      <img v-if="post.image_url" :src="post.image_url" :alt="post.title" class="rounded-lg shadow-md mt-4">
+      <img 
+        v-if="post.image_url" 
+        :src="post.image_url" 
+        :alt="post.title" 
+        class="rounded-lg shadow-md mt-4 cursor-pointer" 
+        @click="openPreview"
+      />
+    </div>
+
+    <!-- Modal de Previsualización de Imagen -->
+    <div 
+      v-if="showPreview" 
+      class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+      @click="closePreview"
+    >
+      <div class="relative" @click.stop>
+        <button 
+          class="absolute top-2 right-2 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75"
+          @click="closePreview"
+        >
+          ✖
+        </button>
+        <img 
+          :src="post.image_url" 
+          alt="Previsualización de la foto" 
+          class="w-[90%] h-[90%] rounded"
+        />
+      </div>
     </div>
 
     <!-- Divider -->
@@ -33,18 +65,19 @@
         placeholder="Escribe tu comentario aquí..." 
         @input="updateCharacterCount"
       />
-      <!-- Mostrar el conteo de caracteres -->
       <p class="text-sm text-gray-500 mt-2">Caracteres restantes: {{ remainingCharacters }} / {{ maxCharacters }}</p>
       <div class="flex justify-end mt-2">
         <Button :isProcessing="isProcessing" @click="submitComment">Enviar</Button>
       </div>
 
-      <!-- Comments List -->
       <div v-if="comments.length" class="mt-8 space-y-6">
         <MainH2>Comentarios</MainH2>
         <div v-for="(comment, index) in comments" :key="index" class="bg-gray-100 p-4 rounded-lg shadow-md">
           <p>{{ comment.text }}</p>
-          <p class="text-sm text-gray-500 mt-1">{{ formatDate(post.created_at) }} - <LinkUser @click="verUsuario(comment.user_id)">{{ comment.email }}</LinkUser></p>
+          <p class="text-sm text-gray-500 mt-1">
+            {{ formatDate(comment.created_at) }} - 
+            <LinkUser @click="verUsuario(comment.user_id)">{{ comment.email }}</LinkUser>
+          </p>
           <div v-if="currentUser && currentUser.id === comment.user_id" class="text-right">
             <DeleteButton @click="confirmDeleteComment(index)">Eliminar</DeleteButton>
           </div>
@@ -69,7 +102,6 @@
     />
   </div>
 
-  <!-- Loading/Error State -->
   <div v-else class="text-center p-10">
     <Spinner v-if="loading" />
     <p v-else class="text-red-500">{{ errorMessage }}</p>
@@ -85,7 +117,6 @@ import Button from '../components/Button.vue';
 import DeleteButton from '../components/DeleteButton.vue';
 import ButtonBack from '../components/ButtonBack.vue';
 import Divider from '../components/Divider.vue';
-import Comment from '../components/Comment.vue';
 import Spinner from '../components/Spinner.vue';
 import Modal from '../components/Modal.vue';
 import { getPost, addCommentToPost, getCommentsForPost, getUserEmail, deletePost, deleteComment } from '../services/post';
@@ -99,18 +130,17 @@ export default {
     LinkUser,
     TextAreaComment,
     Button,
+    DeleteButton,
     ButtonBack,
     Divider,
-    Comment,
     Spinner,
     Modal,
-    DeleteButton
   },
   props: {
     postId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -123,14 +153,14 @@ export default {
       currentUser: null,
       showModal: false,
       showCommentModal: false,
-      commentToDelete: null,
-      maxCharacters: 300, // Máximo de caracteres para el comentario
-      remainingCharacters: 300 // Caracteres restantes
+      showPreview: false,
+      maxCharacters: 300,
+      remainingCharacters: 300,
     };
   },
   methods: {
     verUsuario(userId) {
-      this.$router.push({ path: `/usuario/${userId}`, params: { userId: userId } });
+      this.$router.push(`/usuario/${userId}`);
     },
     async submitComment() {
       if (!this.isProcessing && this.newComment.trim().length > 0) {
@@ -140,16 +170,14 @@ export default {
           if (user && user.id) {
             await addCommentToPost(this.postId, {
               user_id: user.id,
-              text: this.newComment
+              text: this.newComment,
             });
             this.newComment = '';
             this.loadComments();
-            this.remainingCharacters = this.maxCharacters; // Restablecer contador
-          } else {
-            console.error("No se pudo obtener el ID del usuario actual.");
+            this.remainingCharacters = this.maxCharacters;
           }
         } catch (error) {
-          console.error("Error al enviar el comentario:", error);
+          console.error(error);
         } finally {
           this.isProcessing = false;
         }
@@ -162,23 +190,18 @@ export default {
           comment.email = await this.getUserEmail(comment.user_id);
         }
       } catch (error) {
-        console.error("Error al cargar los comentarios:", error);
+        console.error(error);
       }
     },
     async getUserEmail(userId) {
-      try {
-        return await getUserEmail(userId);
-      } catch (error) {
-        console.error("Error al obtener el correo electrónico del usuario:", error);
-        return null;
-      }
+      return getUserEmail(userId).catch(() => null);
     },
     async confirmDeletePost() {
       try {
         await deletePost(this.postId);
         this.$router.push('/posts');
       } catch (error) {
-        console.error("Error al eliminar el post:", error);
+        console.error(error);
       } finally {
         this.showModal = false;
       }
@@ -187,58 +210,54 @@ export default {
       this.commentToDelete = index;
       this.showCommentModal = true;
     },
-    formatDate(date) {
-      return Intl.DateTimeFormat('es', {
-        year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit', 
-        hour: '2-digit', 
-        minute: '2-digit',
-      }).format(date);
-    },
     async deleteComment() {
       try {
         const comment = this.comments[this.commentToDelete];
         await deleteComment(this.postId, comment.id);
         this.comments.splice(this.commentToDelete, 1);
       } catch (error) {
-        console.error("Error al eliminar el comentario:", error);
+        console.error(error);
       } finally {
         this.showCommentModal = false;
       }
     },
+    formatDate(date) {
+      return new Intl.DateTimeFormat('es', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(date));
+    },
     updateCharacterCount() {
       this.remainingCharacters = this.maxCharacters - this.newComment.length;
-    }
+    },
+    openPreview() {
+      this.showPreview = true;
+    },
+    closePreview() {
+      this.showPreview = false;
+    },
   },
   async created() {
     try {
       this.currentUser = currentUser();
-      // Intentamos obtener el post
       this.post = await getPost(this.postId);
-      
-      // Si el post no se encuentra, redirigimos al usuario a la página 404
-      if (!this.post) {
-        this.$router.push({ name: 'NotFound' });
-      } else {
-        this.loading = false;
-        this.loadComments();
-      }
+      if (!this.post) this.$router.push({ name: 'NotFound' });
+      this.loading = false;
+      this.loadComments();
     } catch (error) {
       this.loading = false;
-      this.errorMessage = "El post no pudo ser encontrado.";
-      // Si ocurre un error al obtener el post, redirigimos a la página 404
+      this.errorMessage = 'El post no pudo ser encontrado.';
       this.$router.push({ name: 'NotFound' });
     }
-  }
+  },
 };
 </script>
 
 <style scoped>
 .container {
   max-width: 800px;
-}
-.prose p {
-  color: #333;
 }
 </style>

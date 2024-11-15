@@ -1,215 +1,183 @@
-<script>
-import MainH1 from '../components/MainH1.vue';
-import MainH2 from '../components/MainH2.vue';
-import Button from '../components/Button.vue';
-import Skeleton from '../components/Skeleton.vue';
-import LinkUser from '../components/LinkUser.vue';
-import Divider from '../components/Divider.vue';
-import { getPostsByUser } from '../services/post';
-import { getUserProfile } from '../services/user';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-export default {
-  name: 'Profile',
-  components: { MainH1, MainH2, Button, LinkUser, Skeleton, Divider },
-  data() {
-    return {
-      profile: null, // Datos del perfil del usuario
-      posts: [], // Publicaciones del usuario
-      loading: true,
-      errorMessage: '',
-      successMessage: this.$route.query.successMessage || '', // Mensaje de éxito
-    };
-  },
-  async created() {
-    const auth = getAuth();
-
-    // Escuchar los cambios en el estado de autenticación
-    onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    try {
-      const userId = user.uid;
-
-      // Obtener el perfil del usuario
-      const userProfile = await getUserProfile(userId);
-      console.log("Datos del perfil del usuario:", userProfile); // Mostrar en consola
-      this.profile = userProfile;
-
-      // Obtener los posts del usuario
-      const userPosts = await getPostsByUser(userId);
-      console.log("Publicaciones del usuario:", userPosts); // Mostrar en consola
-      this.posts = userPosts;
-
-      this.loading = false;
-    } catch (error) {
-      this.loading = false;
-      this.errorMessage = 'No se pudieron cargar los datos del usuario.';
-      console.error("Error al cargar los datos del usuario:", error);
-    }
-  } else {
-    this.loading = false;
-    this.errorMessage = 'No se ha iniciado sesión.';
-  }
-});
-
-
-    // Ocultar el mensaje de éxito después de 3 segundos
-    if (this.successMessage) {
-      setTimeout(() => {
-        this.successMessage = '';
-      }, 3000);
-    }
-  },
-  methods: {
-    verUsuario(userId) {
-      this.$router.push({ path: `/usuario/${userId}`, params: { userId: userId } });
-    },
-    verPost(postId) {
-      this.$router.push({ path: `/posts/${postId}`, params: { postId: postId } });
-    },
-    formatDate(date) {
-      return Intl.DateTimeFormat('es', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date);
-    },
-    truncateContent(content) {
-      const maxLength = 300;
-      return content.length > maxLength ? content.substring(0, maxLength) + '...' : content;
-    },
-  },
-};
-</script>
-
 <template>
   <div>
     <!-- Mensaje de éxito -->
-    <div v-if="successMessage" class="success-message mb-4 p-4 text-center text-white bg-green-500 rounded">
+    <div 
+      v-if="successMessage" 
+      class="success-message mb-4 p-4 text-center bg-green-500 rounded">
       {{ successMessage }}
     </div>
 
     <!-- Título y botón para cambiar clave -->
-    <div class="flex flex-col sm:flex-row">
+    <div class="flex flex-col sm:flex-row mb-6">
       <div class="w-full sm:w-3/4">
         <MainH1 class="text-center sm:text-left">Mi Perfil</MainH1>
       </div>
       <div class="w-full sm:text-right">
-        <Button class="w-full sm:w-auto"><router-link to="/update-password">Cambiar clave</router-link></Button>
+        <Button>
+          <router-link to="/update-password">Cambiar clave</router-link>
+        </Button>
       </div>
     </div>
 
-    <div class="w-full mb-10">
-      <Divider></Divider>
-    </div>
+    <Divider />
 
-    <!-- Carga o error -->
-    <div v-if="loading">
-      <div v-for="n in 3" :key="n" class="mb-8">
-        <Skeleton></Skeleton>
-      </div>
+    <!-- Estado de carga o error -->
+    <div v-if="loading" class="mt-6">
+      <Skeleton v-for="n in 3" :key="n" />
     </div>
-    <div v-else-if="errorMessage">{{ errorMessage }}</div>
+    <div v-else-if="errorMessage" class="text-red-500 text-center">
+      {{ errorMessage }}
+    </div>
 
     <!-- Información del perfil -->
     <div v-else>
-      <div v-if="profile" class="mb-10">
-        <MainH2 class="text-center sm:text-left">Información de mi perfil</MainH2>
+      <section v-if="profile" class="mb-10">
+        <MainH2>Información de mi perfil</MainH2>
         <div class="p-4 border rounded-lg shadow-md bg-gray-100 flex items-center space-x-4">
-  <!-- Imagen del usuario -->
-  <div class="w-20 h-20">
-    <img
-      v-if="profile.image_url"
-      :src="profile.image_url"
-      alt="Foto de perfil"
-      class="w-full h-full object-cover rounded-full border-2 border-gray-300 shadow-sm"
-    />
-    <div
-      v-else
-      class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 rounded-full border-2 border-gray-300 shadow-sm"
-    >
-      Sin foto
-    </div>
-  </div>
+          <!-- Imagen del usuario -->
+          <div class="w-20 h-20">
+            <img 
+              v-if="profile.image_url" 
+              :src="profile.image_url" 
+              alt="Foto de perfil" 
+              class="w-full h-full object-cover rounded-full border-2 shadow-sm cursor-pointer" 
+              @click="openPreview" 
+            />
+            <div 
+              v-else 
+              class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 rounded-full border-2 shadow-sm">
+              Sin foto
+            </div>
+          </div>
 
-  <!-- Información del usuario -->
-  <div>
-    <p><strong>Email:</strong> {{ profile.email }}</p>
-    <p v-if="profile.nombre"><strong>Nombre:</strong> {{ profile.nombre }}</p>
-    <p v-if="profile.biografia"><strong>Biografía:</strong> {{ profile.biografia }}</p>
-    <p v-if="profile.genero"><strong>Género:</strong> {{ profile.genero }}</p>
-    <p v-if="profile.createdAt">
-      <strong>Miembro desde:</strong> {{ formatDate(profile.createdAt.toDate()) }}
-    </p>
-  </div>
-</div>
-
-      </div>
+          <!-- Detalles del perfil -->
+          <div>
+            <p><strong>Email:</strong> {{ profile.email }}</p>
+            <p v-if="profile.nombre"><strong>Nombre:</strong> {{ profile.nombre }}</p>
+            <p v-if="profile.biografia"><strong>Biografía:</strong> {{ profile.biografia }}</p>
+            <p v-if="profile.genero"><strong>Género:</strong> {{ profile.genero }}</p>
+          </div>
+        </div>
+      </section>
 
       <!-- Lista de posteos -->
-      <div v-if="posts.length > 0">
-        <MainH2 class="text-center sm:text-left">Mis posteos</MainH2>
+      <section v-if="posts.length > 0">
+        <MainH2>Mis posteos</MainH2>
         <div class="grid grid-cols-1 gap-8">
-          <div
-            v-for="post in posts"
-            :key="post.id"
-            class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto"
-          >
-            <!-- Imagen del post -->
-            <div class="relative">
-              <img
-                v-if="post.image_url"
-                :src="post.image_url"
-                :alt="post.title"
-                class="w-full object-cover rounded-t-lg transition-transform duration-200 transform hover:scale-105"
-              >
-            </div>
-            <!-- Contenido del post -->
-            <div class="p-6 flex flex-col">
-              <div class="mb-4">
-                <MainH2 class="text-2xl font-bold mb-1">{{ post.title }}</MainH2>
-                <div class="flex items-center text-gray-500 text-sm">
-                  <LinkUser @click="verUsuario(post.user_id)" class="mr-2 hover:underline">
-                    {{ post.email }}
-                  </LinkUser>
-                  <span class="text-gray-400">•</span>
-                  <span class="ml-2">{{ formatDate(post.created_at) }}</span>
-                </div>
-              </div>
-              <p class="text-gray-700 mb-6 leading-relaxed">{{ truncateContent(post.content) }}</p>
-              <div class="mt-auto">
-                <Button @click="verPost(post.id)" class="w-full text-white transition-transform duration-200 transform hover:scale-105">
-                  Ver más
-                </Button>
-              </div>
+          <div 
+            v-for="post in posts" 
+            :key="post.id" 
+            class="max-w-md mx-auto border rounded-lg shadow-lg overflow-hidden">
+            <img 
+              v-if="post.image_url" 
+              :src="post.image_url" 
+              :alt="post.title" 
+              class="w-full object-cover" />
+            <div class="p-4">
+              <h3 class="text-xl font-bold">{{ post.title }}</h3>
+              <p class="text-gray-500">{{ formatDate(post.created_at) }}</p>
+              <p class="my-2">{{ truncateContent(post.content) }}</p>
+              <Button @click="verPost(post.id)">Ver más</Button>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- Mensaje si no hay posteos -->
-      <div v-else>
-        <p class="py-4">No tienes posteos aún.</p>
-        <Button><router-link to="/crear-post">Crear nuevo post</router-link></Button>
+      <section v-else class="text-center">
+        <p>No tienes posteos aún.</p>
+        <Button>
+          <router-link to="/crear-post">Crear nuevo post</router-link>
+        </Button>
+      </section>
+    </div>
+
+    <!-- Modal de previsualización de imagen -->
+    <div 
+      v-if="showPreview" 
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white p-4 rounded shadow-lg">
+        <button 
+          class="absolute top-4 right-4 text-gray-500 hover:text-black" 
+          @click="closePreview">
+          ✖
+        </button>
+        <img 
+          :src="profile.image_url" 
+          alt="Previsualización de la foto" 
+          class="max-w-lg max-h-[80vh]" />
       </div>
     </div>
   </div>
 </template>
 
+<script>
+import MainH1 from "../components/MainH1.vue";
+import MainH2 from "../components/MainH2.vue";
+import Button from "../components/Button.vue";
+import Skeleton from "../components/Skeleton.vue";
+import Divider from "../components/Divider.vue";
+import { getPostsByUser } from "../services/post";
+import { getUserProfile } from "../services/user";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+export default {
+  name: "Profile",
+  components: { MainH1, MainH2, Button, Skeleton, Divider },
+  data() {
+    return {
+      profile: null,
+      posts: [],
+      loading: true,
+      errorMessage: "",
+      successMessage: this.$route.query.successMessage || "",
+      showPreview: false, // Control del modal
+    };
+  },
+  async created() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          this.profile = await getUserProfile(user.uid);
+          this.posts = await getPostsByUser(user.uid);
+          this.loading = false;
+        } catch (error) {
+          this.loading = false;
+          this.errorMessage = "No se pudieron cargar los datos del usuario.";
+        }
+      } else {
+        this.loading = false;
+        this.errorMessage = "No se ha iniciado sesión.";
+      }
+    });
+
+    if (this.successMessage) {
+      setTimeout(() => (this.successMessage = ""), 3000);
+    }
+  },
+  methods: {
+    verPost(postId) {
+      this.$router.push(`/posts/${postId}`);
+    },
+    formatDate(date) {
+      return new Date(date).toLocaleString("es-ES");
+    },
+    truncateContent(content) {
+      return content.length > 300 ? `${content.substring(0, 300)}...` : content;
+    },
+    openPreview() {
+      this.showPreview = true;
+    },
+    closePreview() {
+      this.showPreview = false;
+    },
+  },
+};
+</script>
+
 <style scoped>
 .success-message {
-  @apply text-white bg-green-500 rounded;
-}
-
-.image-container {
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.image-container img {
-  width: 100%;
-  height: auto;
+  @apply p-4 bg-green-500 text-white rounded;
 }
 </style>
