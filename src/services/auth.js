@@ -57,24 +57,25 @@ onAuthStateChanged(auth, (user) => {
  *
  * @param {string} email
  * @param {string} password
- * @returns {Promise<void>}
+ * @returns {Promise<UserCredential>} Retorna las credenciales del usuario creado.
  */
 export async function register(email, password) {
   try {
-     // Creando el usuario en el auth
+    // Creando el usuario en el auth
     const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("Usuario creado. ID: ", userCredentials.user.uid);
+    console.log("Usuario creado. ID: ", userCredentials.user.uid);
 
-      // Se crea el perfil de usuario en /users/{idUsuario}
-      await createUserProfile(userCredentials.user.uid, {email});
+    // Se crea el perfil de usuario en /users/{idUsuario}
+    await createUserProfile(userCredentials.user.uid, { email });
+
+    // Retornar las credenciales del usuario
+    return userCredentials;
   } catch (error) {
-    console.error(
-      "[auth.js register] Error al crear una cuenta: ",
-      error.code
-    );
-    throw error;
+    console.error("[auth.js register] Error al crear una cuenta: ", error.code);
+    throw error; // Lanza el error para que el componente pueda manejarlo
   }
 }
+
 
 /**
  *

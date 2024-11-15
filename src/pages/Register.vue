@@ -23,17 +23,25 @@ export default {
   },
   methods: {
     async handleSubmit() {
+      console.log('Datos del usuario antes de registrar:', this.user);
       if (!this.loading) {
         this.loading = true;
-        this.errorMessage = ''; 
+        this.errorMessage = ''; // Limpiar cualquier mensaje de error
         try {
-          await register(this.user.email, this.user.password);
-          this.$router.push({
-            path: '/posts'
-          });
+          // 1. Registrar al usuario en Firebase Authentication
+          const userCredential = await register(this.user.email, this.user.password);
+
+          console.log('Credenciales de usuario:', userCredential);
+
+          // 2. Extraer el userId generado por Firebase Authentication
+          const userId = userCredential.user.uid;
+
+          // 3. Redirigir al usuario a la siguiente pantalla para completar su perfil
+          this.$router.push({ path: '/crear-perfil', query: { userId } });
+
         } catch (error) {
           console.error("Error al registrar el usuario: ", error);
-          this.errorMessage = 'Error al crear la cuenta. Por favor, inténtalo de nuevo.'; 
+          this.errorMessage = 'Error al crear la cuenta. Por favor, inténtalo de nuevo.';
         } finally {
           this.loading = false;
         }
@@ -101,10 +109,8 @@ export default {
   </div>
 </template>
 
-
 <style scoped>
 .error-message {
   color: red;
 }
 </style>
-
