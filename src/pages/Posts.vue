@@ -37,7 +37,7 @@ export default {
       }).format(date);
     },
     verPost(postId) {
-      this.$router.push({ path: `/posts/${postId}`, params: { postId: postId } });
+      this.$router.push({ name: 'Post', params: { postId: postId } });
     },
     verUsuario(userId) {
       const auth = getAuth();

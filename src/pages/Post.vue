@@ -1,12 +1,16 @@
 <template>
-  <div v-if="post" class="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
+  <div 
+    v-if="post" 
+    class="mx-auto px-4 sm:px-6 md:px-8 py-6 bg-gray-50 rounded-lg shadow-lg 
+           w-full max-w-none md:max-w-2xl lg:max-w-3xl"
+  >
     <!-- Post Header -->
     <div class="text-center">
       <ButtonBack class="text-gray-700">
         <router-link to="/posts">Volver</router-link>
       </ButtonBack>
-      <MainH1 class="text-4xl font-bold">{{ post.title }}</MainH1>
-      <p class="text-gray-500 mt-2">
+      <MainH1 class="text-2xl sm:text-4xl font-bold">{{ post.title }}</MainH1>
+      <p class="text-gray-500 mt-2 text-sm sm:text-base">
         {{ formatDate(post.created_at) }} por 
         <LinkUser @click="verUsuario(post.user_id)">{{ post.email }}</LinkUser>
       </p>
@@ -28,7 +32,7 @@
         v-if="post.image_url" 
         :src="post.image_url" 
         :alt="post.title" 
-        class="rounded-lg shadow-md mt-4 cursor-pointer" 
+        class="rounded-lg shadow-md mt-4 cursor-pointer w-full"
         @click="openPreview"
       />
     </div>
@@ -58,7 +62,7 @@
     <Divider />
 
     <!-- Comments Section -->
-    <section class="bg-white p-6 rounded-lg shadow-md">
+    <section class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
       <MainH2>Deja un comentario</MainH2>
       <TextAreaComment 
         v-model="newComment" 
@@ -107,6 +111,7 @@
     <p v-else class="text-red-500">{{ errorMessage }}</p>
   </div>
 </template>
+
 
 <script>
 import MainH1 from '../components/MainH1.vue';

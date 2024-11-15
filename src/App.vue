@@ -97,7 +97,7 @@ export default {
       </template>
     </ul>
 
-    <main class="container max-w-5xl p-10 mx-auto">
+    <main class="w-full md:max-w-5xl lg:max-w-6xl xl:max-w-7xl md:p-10 mx-auto">
       <router-view />
     </main>
 
