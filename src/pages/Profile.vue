@@ -68,7 +68,7 @@
 
       <!-- Lista de posteos -->
       <section v-if="posts.length > 0">
-        <MainH2>Mis posteos</MainH2>
+        <MainH2 class="pt-5">Mis posteos</MainH2>
         <div class="grid grid-cols-1 gap-8">
           <div 
             v-for="post in posts" 

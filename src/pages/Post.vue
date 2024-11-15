@@ -5,24 +5,35 @@
            w-full max-w-none md:max-w-2xl lg:max-w-3xl"
   >
     <!-- Post Header -->
-    <div class="text-center">
-      <ButtonBack class="text-gray-700">
-        <router-link to="/posts">Volver</router-link>
-      </ButtonBack>
-      <MainH1 class="text-2xl sm:text-4xl font-bold py-5">{{ post.title }}</MainH1>
-      <p class="text-gray-500 mt-2 text-sm sm:text-base">
-        {{ formatDate(post.created_at) }} por 
-        <LinkUser @click="verUsuario(post.user_id)">{{ post.email }}</LinkUser>
-      </p>
-      <div class="flex justify-center mt-4 space-x-4">
+    <div class="text-left">
+
+
+      <div class="flex flex-row justify-between items-center mt-4 space-y-0 space-x-4">
+        <!-- Botón de Volver -->
+        <ButtonBack class="text-gray-700">
+          <router-link to="/posts">Volver</router-link>
+        </ButtonBack>
+
+        <!-- Botón de Eliminar Post -->
         <DeleteButton 
           v-if="currentUser && currentUser.id === post.user_id" 
           @click="showModal = true" 
-          class="bg-red-600 text-white px-3 py-2 rounded-md"
+          class="bg-red-600 text-white p-2 rounded-md"
         >
-          Eliminar Post
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <title>Eliminar post</title>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7L12 14L5 7M12 10V3M12 3L15 6M12 3L9 6M3 6H21M19 6V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V6"></path>
+          </svg>
         </DeleteButton>
       </div>
+
+
+      <MainH1 class="text-2xl sm:text-4xl font-bold pt-2">{{ post.title }}</MainH1>
+      <p class="text-gray-400 mt-2 text-sm sm:text-base">
+        {{ formatDate(post.created_at) }} por 
+        <LinkUser @click="verUsuario(post.user_id)">{{ post.email }}</LinkUser>
+      </p>
+      
     </div>
 
     <!-- Post Content -->
