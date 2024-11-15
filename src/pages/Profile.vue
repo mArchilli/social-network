@@ -8,14 +8,14 @@
     </div>
 
     <!-- Título y botón para cambiar clave -->
-    <div class="flex flex-col sm:flex-row mb-6 items-center">
+    <div class="flex flex-row mb-6 items-center">
       <div class="w-full sm:w-3/4">
         <MainH1 class="text-center sm:text-left hidden">Mi Perfil</MainH1>
         <ButtonBack class="text-gray-700 py-5">
           <router-link to="/posts">Volver</router-link>
         </ButtonBack>
       </div>
-      <div class="w-full sm:text-right">
+      <div class="w-full sm:text-right px-0 mx-0">
         <Button>
           <router-link to="/update-password">Cambiar clave</router-link>
         </Button>
@@ -33,7 +33,7 @@
     <!-- Información del perfil -->
     <div v-else>
       <section v-if="profile" class="mb-10">
-  <!-- <MainH2 class="text-center text-2xl font-semibold mb-6">Información de mi perfil</MainH2> -->
+  <MainH2 class="text-center text-2xl font-semibold mb-6 hidden">Información de mi perfil</MainH2> 
 
   <div class="flex items-center justify-center space-x-6 p-6 border rounded-lg shadow-md bg-white">
     
@@ -43,7 +43,7 @@
         v-if="profile.image_url" 
         :src="profile.image_url" 
         alt="Foto de perfil" 
-        class="w-full h-full object-cover rounded-full border-4 border-white shadow-lg cursor-pointer"
+        class="w-full h-full object-cover object-center rounded-full border-4 border-white shadow-lg cursor-pointer"
         @click="openPreview" 
       />
       <div 
