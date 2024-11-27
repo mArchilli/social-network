@@ -136,7 +136,8 @@ export default {
         <!-- Lista de posteos -->
         <MainH2 class="mt-10">Posteos</MainH2>
         <div class="grid grid-cols-1 gap-8">
-          <div v-for="post in posts" :key="post.id" class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto">
+          <div v-for="post in posts" :key="post.id" 
+          class="max-w-[470px] w-full border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-200 mx-auto flex flex-col justify-between">
             
             <!-- Post Image -->
             <div class="relative">
