@@ -44,13 +44,9 @@ export default {
 
 <template>
   <div class="h-full flex flex-col lg:flex-row items-center">
-    <!-- Imagen de fondo solo visible en Desktop -->
-    <div class="hidden lg:block lg:w-1/2 h-full">
-      <img :src="imagenSrc" class="w-full h-full object-cover rounded-lg" alt="Imagen de LibraLink Logeo">
-    </div>
 
     <!-- Sección de Login -->
-    <div class="w-full lg:w-1/2 px-6 md:px-12 lg:px-24 py-10 md:py-24 flex flex-col justify-center bg-white shadow-lg rounded-lg">
+    <div class="w-full max-w-2xl px-6 md:px-12 lg:px-24 py-10 md:py-24 flex flex-col justify-center bg-white shadow-lg rounded-lg mx-auto">
       <MainH1 class="text-center text-3xl font-bold text-gray-800">Iniciar sesión</MainH1>
       <MainH2 class="text-center mt-2 text-gray-500">Bienvenido a LibraLink</MainH2>
 

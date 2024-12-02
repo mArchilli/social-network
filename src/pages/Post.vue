@@ -50,24 +50,20 @@
 
     <!-- Modal de Previsualización de Imagen -->
     <div 
-      v-if="showPreview" 
-      class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-      @click="closePreview"
-    >
-      <div class="relative" @click.stop>
-        <button 
-          class="absolute top-2 right-2 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75"
-          @click="closePreview"
-        >
-          ✖
-        </button>
-        <img 
-          :src="post.image_url" 
-          alt="Previsualización de la foto" 
-          class="w-[90%] h-[90%] rounded"
-        />
-      </div>
-    </div>
+  v-if="showPreview" 
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div>
+    <button 
+      class="absolute top-5 right-5 text-white hover:text-gray-500" 
+      @click="closePreview">
+      ✖
+    </button>
+    <img 
+      :src="post.image_url" 
+      alt="Previsualización de la foto" 
+      class="max-w-[90%] max-h-[80vh] mx-auto rounded" />
+  </div>
+</div>
 
     <!-- Divider -->
     <Divider />

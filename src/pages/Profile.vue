@@ -102,9 +102,9 @@
     <div 
       v-if="showPreview" 
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class=" rounded shadow-lg">
+      <div>
         <button 
-          class="absolute top-4 right-4 text-gray-500 hover:text-black" 
+          class="absolute top-5 right-5 text-white hover:text-gray-500" 
           @click="closePreview">
           ✖
         </button>

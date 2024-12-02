@@ -53,13 +53,9 @@ export default {
 
 <template>
   <div class="flex flex-col md:flex-row items-center">
-    <!-- Imagen de fondo solo visible en Desktop -->
-    <div class="hidden lg:block lg:w-1/2 h-full">
-      <img :src="imagenSrc" class="w-full h-full object-cover rounded-lg" alt="Imagen de LibraLink Registro">
-    </div>
 
     <!-- Sección de Registro -->
-    <div class="w-full lg:w-1/2 px-6 md:px-12 lg:px-24 py-10 md:py-14 flex flex-col justify-center bg-white shadow-lg rounded-lg lg:mb-0 mb-6">
+    <div class="w-full max-w-2xl px-6 md:px-12 lg:px-24 py-10 md:py-14 flex flex-col justify-center bg-white shadow-lg rounded-lg lg:mb-0 mb-6 mx-auto">
       <MainH1 class="text-center text-3xl font-bold text-gray-800">Crear Cuenta</MainH1>
       <MainH2 class="text-center mt-2 text-gray-500">Registrate para disfrutar de nuestra red social</MainH2>
 
